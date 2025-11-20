@@ -15,9 +15,11 @@ ChatKit achieves deep customization through a comprehensive `ChatKitOptions` int
 ### 1.1 Theme & Visual Appearance (`theme`)
 
 **Color Scheme:**
+
 - `colorScheme`: `'light' | 'dark'`
 
 **Typography:**
+
 - `typography.baseSize`: `14 | 15 | 16 | 17 | 18` (base font size in pixels)
 - `typography.fontSources`: Array of `FontObject` for custom web fonts
   - `family`: CSS font-family name
@@ -30,10 +32,12 @@ ChatKit achieves deep customization through a comprehensive `ChatKitOptions` int
 - `typography.fontFamilyMono`: Monospace font family
 
 **Spacing & Layout:**
+
 - `radius`: `'pill' | 'round' | 'soft' | 'sharp'` - controls corner roundness
 - `density`: `'compact' | 'normal' | 'spacious'` - controls overall spacing
 
 **Color Customization:**
+
 - `color.grayscale`:
   - `hue`: 0-360 (hue in degrees)
   - `tint`: `0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9`
@@ -127,6 +131,7 @@ ChatKit visualizes agentic actions through **two primary mechanisms**:
 Client tools allow the backend agent to delegate work to the browser:
 
 **Protocol:**
+
 1. Backend agent calls a client tool during response generation
 2. ChatKit receives the tool call and pauses the response
 3. ChatKit invokes `onClientTool({ name, params })` handler
@@ -135,6 +140,7 @@ Client tools allow the backend agent to delegate work to the browser:
 6. Agent continues processing with the client tool result
 
 **Expected Format:**
+
 ```typescript
 onClientTool?: (toolCall: {
   name: string;  // Tool identifier
@@ -143,11 +149,13 @@ onClientTool?: (toolCall: {
 ```
 
 **Use Cases:**
+
 - Accessing browser-only APIs (geolocation, local storage)
 - Updating UI state in sync with server changes
 - Triggering client-side actions (opening tabs, sending emails)
 
 **Error Handling:**
+
 - Throwing an error in the handler fails the tool call
 - Error message is sent to the agent
 - Response stream halts on tool failure
@@ -157,6 +165,7 @@ onClientTool?: (toolCall: {
 Widgets can trigger custom actions that represent agentic steps:
 
 **Protocol:**
+
 1. Server sends widget (Card or ListView) in response
 2. Widget contains interactive elements (buttons, forms) with `ActionConfig`
 3. User interacts with widget element
@@ -165,6 +174,7 @@ Widgets can trigger custom actions that represent agentic steps:
 6. Optionally use `sendCustomAction()` to send action back to server
 
 **Expected Format:**
+
 ```typescript
 widgets?: {
   onAction?: (
@@ -175,6 +185,7 @@ widgets?: {
 ```
 
 **Workflow Visualization:**
+
 - Each action can represent a step in an agentic workflow
 - Widget status can show current step: `status: { text: string; icon?: string }`
 - Actions can update widget state to show progress
@@ -224,6 +235,7 @@ ChatKit expects widgets to follow a **strongly-typed, declarative JSON structure
 ChatKit provides **25 widget component types**:
 
 #### Layout Components (7)
+
 - `Box`: Flexible container with direction (row/col)
 - `Row`: Horizontal layout container
 - `Col`: Vertical layout container
@@ -233,6 +245,7 @@ ChatKit provides **25 widget component types**:
 - `Transition`: Animated state transition wrapper
 
 #### Text Components (4)
+
 - `Text`: Basic text with extensive styling options
   - Supports: size, weight, color, alignment, truncation, line limits
   - Can be editable with form integration
@@ -242,6 +255,7 @@ ChatKit provides **25 widget component types**:
 - `Markdown`: Formatted markdown content with streaming support
 
 #### Content Components (3)
+
 - `Badge`: Labeled badge with color variants
   - Colors: secondary, success, danger, warning, info, discovery
   - Variants: solid, soft, outline
@@ -251,6 +265,7 @@ ChatKit provides **25 widget component types**:
 - `Image`: Image with fit modes, positioning, and optional frame
 
 #### Interactive Components (11)
+
 - `Button`: Clickable button
   - Styles: primary, secondary
   - Colors: 8 options (primary, danger, success, etc.)
@@ -307,12 +322,13 @@ Interactive widgets use `ActionConfig`:
 
 ```typescript
 type ActionConfig = {
-  type: string;  // Custom action type
-  payload?: Record<string, unknown>;  // Optional data
-}
+  type: string; // Custom action type
+  payload?: Record<string, unknown>; // Optional data
+};
 ```
 
 **Action Flow:**
+
 1. Widget definition includes action: `{ type: 'refresh-dashboard', payload: { page: 1 } }`
 2. User interacts (clicks button, changes select, etc.)
 3. ChatKit calls `widgets.onAction(action, widgetItem)`
@@ -339,12 +355,14 @@ Form data is collected by field `name` and included in the submit action.
 #### Theming Support
 
 Widgets support dual themes:
+
 - `theme?: 'light' | 'dark'` - Override ChatKit's theme per widget
 - `ThemeColor`: Colors can be theme-aware: `{ dark: '#fff', light: '#000' }`
 
 #### State Management
 
 Widget state is managed through:
+
 - **Collapse states**: Cards can be collapsed
 - **Status indicators**: Show loading/processing states
 - **Transitions**: Smooth animations between states
@@ -354,6 +372,7 @@ Widget state is managed through:
 ### 3.4 Widget Design Tool
 
 ChatKit provides **Widget Studio** (https://widgets.chatkit.studio/):
+
 - Visual editor for designing widgets
 - Live preview
 - Export to JSON
@@ -368,6 +387,7 @@ ChatKit provides **Widget Studio** (https://widgets.chatkit.studio/):
 ### 4.1 Thread Concept
 
 **Threads** are conversation containers:
+
 - Each thread has a unique ID (string)
 - Thread can be new (ID = null) or existing (ID = string)
 - Threads have titles (auto-generated or user-renamed)
@@ -382,22 +402,22 @@ ChatKit provides **Widget Studio** (https://widgets.chatkit.studio/):
 interface OpenAIChatKit {
   // Switch threads
   setThreadId(threadId: string | null): Promise<void>;
-  
+
   // Send message in current thread
   sendUserMessage(params: {
     text: string;
-    reply?: string;  // Quote for context
+    reply?: string; // Quote for context
     attachments?: Attachment[];
-    newThread?: boolean;  // Force new thread
+    newThread?: boolean; // Force new thread
   }): Promise<void>;
-  
+
   // Set composer without sending
   setComposerValue(params: {
     text: string;
     reply?: string;
     attachments?: Attachment[];
   }): Promise<void>;
-  
+
   // Manually sync with server
   fetchUpdates(): Promise<void>;
 }
@@ -409,11 +429,11 @@ interface OpenAIChatKit {
 type ChatKitEvents = {
   // Thread selection changed
   'chatkit.thread.change': CustomEvent<{ threadId: string | null }>;
-  
+
   // Thread loading lifecycle
   'chatkit.thread.load.start': CustomEvent<{ threadId: string }>;
   'chatkit.thread.load.end': CustomEvent<{ threadId: string }>;
-}
+};
 ```
 
 ### 4.3 Message Structure
@@ -447,16 +467,19 @@ threadItemActions?: {
 ```
 
 **Feedback Flow:**
+
 - User clicks thumbs up/down
 - Feedback sent to server automatically
 - Server can log/process feedback
 
 **Retry Flow:**
+
 - User clicks retry
 - Server receives retry event
 - Server removes failed items and restarts generation
 
 **Share Flow:**
+
 - User clicks share
 - `message.share` event emitted (not in public types, likely internal)
 - Event contains shared content, item IDs, thread ID
@@ -464,6 +487,7 @@ threadItemActions?: {
 #### Attachment Handling
 
 **Upload Process** (for custom backends):
+
 1. User selects files in composer
 2. Files uploaded via `uploadStrategy`:
    - `two_phase`: Upload then attach
@@ -472,24 +496,28 @@ threadItemActions?: {
 4. Attachments included in message submission
 
 **Attachment Types:**
+
 ```typescript
-type Attachment = {
-  type: 'file';
-  id: string;
-  name: string;
-  mime_type: string;
-} | {
-  type: 'image';
-  id: string;
-  preview_url: string;  // For thumbnail
-  name: string;
-  mime_type: string;
-}
+type Attachment =
+  | {
+      type: 'file';
+      id: string;
+      name: string;
+      mime_type: string;
+    }
+  | {
+      type: 'image';
+      id: string;
+      preview_url: string; // For thumbnail
+      name: string;
+      mime_type: string;
+    };
 ```
 
 #### Reply Context
 
 Messages can include quoted context:
+
 - `reply` parameter in `sendUserMessage` and `setComposerValue`
 - Displays quoted text above new message
 - Helps maintain conversation context
@@ -497,20 +525,24 @@ Messages can include quoted context:
 ### 4.5 Thread State Management
 
 **Initialization:**
+
 ```typescript
 {
-  initialThread: 'thread_123' | null
+  initialThread: 'thread_123' | null;
 }
 ```
+
 - `null`: Start with new thread view
 - `string`: Load existing thread
 
 **Persistence:**
+
 - Listen to `chatkit.thread.change` event
 - Store `threadId` in app state/storage
 - Restore on next mount via `initialThread`
 
 **Synchronization:**
+
 - ChatKit polls server for updates (automatic)
 - Manual sync: `fetchUpdates()` after external changes
 - Real-time updates via server events (WebSocket/SSE implied)
@@ -526,6 +558,7 @@ history?: {
 ```
 
 **Features:**
+
 - Sidebar/panel listing all threads
 - Thread titles (auto-generated or custom)
 - Delete threads (with confirmation)
@@ -536,18 +569,20 @@ history?: {
 
 ```typescript
 type ChatKitEvents = {
-  'chatkit.response.start': CustomEvent<void>;  // Agent starts responding
-  'chatkit.response.end': CustomEvent<void>;    // Agent finishes
-}
+  'chatkit.response.start': CustomEvent<void>; // Agent starts responding
+  'chatkit.response.end': CustomEvent<void>; // Agent finishes
+};
 ```
 
 **Streaming Behavior:**
+
 - Text appears incrementally
 - Widgets appear when complete
 - Tool calls pause the stream
 - Streaming state prevents certain operations
 
 **Client State Management:**
+
 ```typescript
 onResponseStart: () => setIsResponding(true),
 onResponseEnd: () => setIsResponding(false)
@@ -565,16 +600,17 @@ Use `isResponding` to disable UI elements during generation.
 
 ```typescript
 type Entity = {
-  title: string;        // Display name: "Harry Potter", "Claim #A-1023"
-  id: string;           // Unique identifier
-  icon?: string;        // Optional icon URL
+  title: string; // Display name: "Harry Potter", "Claim #A-1023"
+  id: string; // Unique identifier
+  icon?: string; // Optional icon URL
   interactive?: boolean; // Can be clicked/previewed
-  group?: string;       // Grouping: "People", "Documents"
+  group?: string; // Grouping: "People", "Documents"
   data?: Record<string, string>; // Arbitrary metadata
-}
+};
 ```
 
 **Examples of Entities:**
+
 - **Documents**: PDFs, articles, wiki pages
 - **People**: Users, customers, team members
 - **Business Objects**: Tickets, orders, claims
@@ -597,6 +633,7 @@ Source annotations are entities used as **citations** in assistant responses.
    - Clicking triggers `entities.onClick`
 
 3. **Preview Generation**:
+
 ```typescript
 entities?: {
   onRequestPreview?: (entity: Entity) => Promise<{
@@ -606,6 +643,7 @@ entities?: {
 ```
 
 **Preview Widget Example:**
+
 ```typescript
 onRequestPreview: async (entity) => ({
   preview: {
@@ -653,11 +691,13 @@ entities?: {
 #### Tagged Entity Rendering
 
 **In User Messages:**
+
 - Tags appear as highlighted mentions
 - Clicking tag triggers `entities.onClick(entity)`
 - Preview on hover via `onRequestPreview`
 
 **In Assistant Messages:**
+
 - Same rendering as user messages
 - Source annotations use same entity type
 - Consistent interaction model
@@ -681,6 +721,7 @@ Server receives full entity context
 ```
 
 **Server-Side Use:**
+
 - Entity IDs and metadata sent to backend
 - Server can retrieve full entity details
 - Can influence agent behavior (e.g., search specific user's documents)
@@ -688,17 +729,20 @@ Server receives full entity context
 ### 5.4 Entity Interaction Patterns
 
 #### Preview Popover
+
 - Appears on hover over entity
 - Uses Widget system for rendering
 - Can show rich information (text, images, buttons)
 - Cached to avoid repeated calls
 
 #### Click Actions
+
 ```typescript
 entities?: {
   onClick: (entity: Entity) => void
 }
 ```
+
 - Navigate to entity page
 - Open entity in modal
 - Copy entity reference
@@ -709,6 +753,7 @@ entities?: {
 ```typescript
 interactive?: boolean
 ```
+
 - `true`: Entity is clickable and shows preview
 - `false` / `undefined`: Entity is display-only
 - Useful for distinguishing actionable vs. informational entities
@@ -720,11 +765,13 @@ data?: Record<string, string>
 ```
 
 **Purposes:**
+
 1. **Server Communication**: Metadata sent back to server in message
 2. **Client Actions**: Used by `onClick` and `onRequestPreview` handlers
 3. **Contextual Information**: Store URLs, IDs, types without separate lookup
 
 **Example:**
+
 ```typescript
 {
   id: 'doc_123',
@@ -741,11 +788,13 @@ data?: Record<string, string>
 ### 5.6 Combining Source Annotations and Tags
 
 **Unified Entity System:**
+
 - Same `Entity` type for both sources and tags
 - Same preview system for both contexts
 - Consistent interaction model
 
 **Workflow Example:**
+
 1. User tags `@document-123` in message
 2. Agent searches document and cites it as source
 3. Response shows document as both:
@@ -760,12 +809,14 @@ data?: Record<string, string>
 Per the docs: "Entities are supported only in custom integrations. If you are using ChatKit.js with a hosted backend, entity features are not available."
 
 **Backend Responsibilities:**
+
 - Maintain entity database
 - Implement search (for tag autocomplete)
 - Generate source annotations in responses
 - Handle entity clicks/previews (custom backends)
 
 **Client Responsibilities:**
+
 - Implement `onTagSearch` (query entity DB)
 - Implement `onClick` (handle entity activation)
 - Implement `onRequestPreview` (generate preview widgets)
@@ -811,6 +862,7 @@ Repository Structure:
 ### 6.3 Integration Points
 
 **With Backend:**
+
 - Client token / custom API authentication
 - Message submission and streaming
 - Widget JSON generation
@@ -819,6 +871,7 @@ Repository Structure:
 - File upload handling
 
 **With Host Application:**
+
 - Options configuration
 - Event listeners
 - Imperative method calls
@@ -829,6 +882,7 @@ Repository Structure:
 ### 6.4 Limitations and Constraints
 
 **What ChatKit Doesn't Provide:**
+
 - Backend implementation (use OpenAI ChatKit SDK or custom)
 - Entity database (implement `onTagSearch`)
 - File storage (implement upload strategy)
@@ -837,6 +891,7 @@ Repository Structure:
 - Database for threads/messages (server-managed)
 
 **What ChatKit Does Provide:**
+
 - Complete UI components
 - Type-safe interfaces
 - React integration
@@ -875,6 +930,7 @@ This is a **design choice** rather than a limitation—it keeps ChatKit general-
 ### 7.3 Widget System as Universal UI
 
 The widget system is remarkably comprehensive:
+
 - 25 component types
 - Declarative JSON format
 - Form handling built-in
@@ -884,6 +940,7 @@ The widget system is remarkably comprehensive:
 - Visual design tool (Widget Studio)
 
 This makes widgets suitable for:
+
 - Data visualization
 - Form collection
 - Multi-step workflows
@@ -894,12 +951,14 @@ This makes widgets suitable for:
 ### 7.4 Entity System Design
 
 Entities are a **unified abstraction** for:
+
 - Source citations (agent → user)
 - @-mentions (user → agent)
 - Clickable references
 - Contextual previews
 
 This unification provides:
+
 - Consistent UX for related concepts
 - Shared implementation
 - Metadata flow in both directions
@@ -908,6 +967,7 @@ This unification provides:
 ### 7.5 Customization Depth
 
 With 40+ direct properties and nested options, ChatKit can be tailored to nearly any design system:
+
 - Full color control (grayscale, accent, surfaces)
 - Typography system (fonts, sizes)
 - Spacing system (density, radius)
@@ -925,6 +985,7 @@ Yet it maintains simplicity—most apps need only 5-10 options.
 ### Q1: What are the properties to allow customization? List all of them.
 
 **Answer**: See Section 1 for the complete list. Summary:
+
 - **Theme**: 15+ properties (color scheme, typography, colors, spacing, radius, density)
 - **Header**: 5 properties (enable, title, left/right actions)
 - **History**: 3 properties (enable, delete, rename)
@@ -942,6 +1003,7 @@ Yet it maintains simplicity—most apps need only 5-10 options.
 ### Q2: How does it visualize agentic actions? Explain if there is a protocol for it to interpret, how does it expect updates from an agent.
 
 **Answer**: See Section 2. Key points:
+
 - **No specialized protocol** for agentic actions
 - Uses **composition** of: text streaming + client tools + widgets
 - **Client tools** represent agent steps requiring browser execution
@@ -953,6 +1015,7 @@ Yet it maintains simplicity—most apps need only 5-10 options.
 ### Q3: How does it render interactive widgets? Does it expect a certain type or convention of widgets?
 
 **Answer**: See Section 3. Key points:
+
 - **25 component types** in declarative JSON format
 - **Three root types**: Card, ListView, BasicRoot
 - **Convention**: Hierarchical tree structure with `type`, optional `id`/`key`, and `children`
@@ -965,6 +1028,7 @@ Yet it maintains simplicity—most apps need only 5-10 options.
 ### Q4: Drill down to thread and message management.
 
 **Answer**: See Section 4. Key points:
+
 - **Threads**: Conversation containers with unique IDs
 - **Operations**: `setThreadId()`, `sendUserMessage()`, `setComposerValue()`, `fetchUpdates()`
 - **Events**: Thread change, load start/end, response start/end
@@ -977,6 +1041,7 @@ Yet it maintains simplicity—most apps need only 5-10 options.
 ### Q5: What is source annotation and entity tagging?
 
 **Answer**: See Section 5. Key points:
+
 - **Entities**: Structured objects (documents, people, business objects) with ID, title, metadata
 - **Source Annotations**: Entities cited by agent as information sources
   - Appear as inline citations in responses
@@ -1023,7 +1088,8 @@ ChatKit achieves its extensive feature set through a carefully designed architec
 - **Implementation**: CDN-delivered web component (proprietary)
 - **Backend**: Server SDK or custom implementation (flexible)
 
-The "not much code" observation is correct for *this* repository, but the system as a whole is sophisticated. The value here is in:
+The "not much code" observation is correct for _this_ repository, but the system as a whole is sophisticated. The value here is in:
+
 1. **Excellent TypeScript types** that document the entire API
 2. **Clean React integration** that works seamlessly
 3. **Well-designed patterns** for customization, entities, widgets, and actions
