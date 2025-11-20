@@ -91,7 +91,6 @@ Protocol:
 **Two uses**:
 
 1. **Source Annotations** (agent → user):
-
    - Assistant cites entities as sources
    - Appear as inline citations
    - Hover shows preview (custom widget)
