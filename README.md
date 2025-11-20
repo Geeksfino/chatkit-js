@@ -12,6 +12,11 @@ ChatKit is a batteries-included framework for building high-quality, AI-powered 
 
 Simply drop the ChatKit component into your app, configure a few options, and you're good to go.
 
+## 📚 Documentation
+
+- **[Investigation Report](./INVESTIGATION_REPORT.md)** - Comprehensive technical deep dive into ChatKit's architecture, customization options, widget system, and entity handling
+- **[Quick Reference](./INVESTIGATION_SUMMARY.md)** - One-page summary with fast answers to common questions
+
 ### What makes ChatKit different?
 
 ChatKit is a framework-agnostic, drop-in chat solution.
